@@ -1,23 +1,40 @@
 package com.sky.service.impl;
 
 import com.sky.constant.MessageConstant;
+import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
 import com.sky.exception.AccountLockedException;
 import com.sky.exception.AccountNotFoundException;
 import com.sky.exception.PasswordErrorException;
 import com.sky.mapper.EmployeeMapper;
+import com.sky.properties.JwtProperties;
 import com.sky.service.EmployeeService;
+import com.sky.utils.JwtUtil;
+import io.jsonwebtoken.Claims;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
+
 @Service
+@Slf4j
 public class EmployeeServiceImpl implements EmployeeService {
 
     @Autowired
     private EmployeeMapper employeeMapper;
+
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private JwtProperties jwtProperties;
 
     /**
      * 员工登录
@@ -26,7 +43,7 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @return
      */
     public Employee login(EmployeeLoginDTO employeeLoginDTO) {
-        String username = employeeLoginDTO.getUsername();
+         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
 
         //1、根据用户名查询数据库中的数据
@@ -39,7 +56,9 @@ public class EmployeeServiceImpl implements EmployeeService {
         }
 
         //密码比对
-        // TODO 后期需要进行md5加密，然后再进行比对
+        // 对前端出过来的明文密码进行md5加密处理，然后再进行比对
+        password = DigestUtils.md5DigestAsHex(password.getBytes());//getbytes转成bytes数组
+
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -52,6 +71,30 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //3、返回实体对象
         return employee;
+    }
+
+    /**
+     * 新增员工
+     * @param employeeDTO
+     */
+    @Override
+    public void save(EmployeeDTO employeeDTO) {//传进来的dto是为了方便封装前端提交的数据，给持久层建议使用实体类将dto转成实体
+        Employee employee=new Employee();
+        //对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO,employee);//源对象拷贝给目标对象，前提是属性名一致
+        employee.setStatus(StatusConstant.ENABLE);//调用了设置了的状态常量
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));//调用了设置的密码常量
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+        String jwt = request.getHeader(jwtProperties.getAdminTokenName());
+        Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(),jwt);
+        log.info("对象{}",claims.get("empId"));
+        Long operateUser = Long.valueOf(String.valueOf(claims.get("empId")));
+        //TODO (本人已完成)后期需要改为当前登录用户id
+        employee.setCreateUser(operateUser);
+        employee.setUpdateUser(operateUser);
+        log.info("目标对象操作人id:{}",operateUser);
+        employeeMapper.insert(employee);
     }
 
 }
