@@ -96,6 +96,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         Long operateUser = BaseContext.getCurrentId();
         employee.setCreateUser(operateUser);
         employee.setUpdateUser(operateUser);
+        BaseContext.removeCurrentId();
         log.info("目标对象操作人id:{}",operateUser);
         employeeMapper.insert(employee);
     }
