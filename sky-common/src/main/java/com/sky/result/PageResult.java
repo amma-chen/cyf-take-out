@@ -13,7 +13,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PageResult implements Serializable {
+public class PageResult implements Serializable {//data里封装的
 
     private long total; //总记录数
 
