@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @Slf4j
@@ -118,6 +117,20 @@ public class EmployeeServiceImpl implements EmployeeService {
         Page<Employee> page1=employeeMapper.pageQuery(employeePageQueryDTO);
         PageResult pageResult = new PageResult(page1.size(), page1);//page1.getTotal()
         return pageResult;
+    }
+
+    /**
+     * 启用禁用员工账号
+     * @param status
+     * @param id
+     */
+    @Override
+    public void startOrStop(Integer status, long id) {//为了修改的通用性将持久层update语句写成动态的，因此需要这里传递EMP实体
+        Employee employee = Employee.builder()
+                .status(status)
+                .id(id)
+                .build();
+        employeeMapper.update(employee);
     }
 
 }
