@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -30,11 +31,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Autowired
     private EmployeeMapper employeeMapper;
 
-    @Autowired
+/*    @Autowired
     private HttpServletRequest request;
 
     @Autowired
-    private JwtProperties jwtProperties;
+    private JwtProperties jwtProperties;*/
+    //提取token的复杂方法
 
     /**
      * 员工登录
@@ -86,11 +88,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));//调用了设置的密码常量
         employee.setCreateTime(LocalDateTime.now());
         employee.setUpdateTime(LocalDateTime.now());
-        String jwt = request.getHeader(jwtProperties.getAdminTokenName());
+/*        String jwt = request.getHeader(jwtProperties.getAdminTokenName());
         Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(),jwt);
         log.info("对象{}",claims.get("empId"));
-        Long operateUser = Long.valueOf(String.valueOf(claims.get("empId")));
-        //TODO (本人已完成)后期需要改为当前登录用户id
+        Long operateUser = Long.valueOf(String.valueOf(claims.get("empId")));*/
+        //后期需要改为当前登录用户id
+        Long operateUser = BaseContext.getCurrentId();
         employee.setCreateUser(operateUser);
         employee.setUpdateUser(operateUser);
         log.info("目标对象操作人id:{}",operateUser);
