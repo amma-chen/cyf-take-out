@@ -57,7 +57,7 @@ public class AliOssUtil {
         stringBuilder
                 .append(bucketName)
                 .append(".")
-                .append(endpoint)
+                .append(endpoint.split("//")[1])
                 .append("/")
                 .append(objectName);
 
