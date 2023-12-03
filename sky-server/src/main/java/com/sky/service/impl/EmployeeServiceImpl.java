@@ -86,18 +86,18 @@ public class EmployeeServiceImpl implements EmployeeService {
         BeanUtils.copyProperties(employeeDTO,employee);//源对象拷贝给目标对象，前提是属性名一致
         employee.setStatus(StatusConstant.ENABLE);//调用了设置了的状态常量
         employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));//调用了设置的密码常量
-        employee.setCreateTime(LocalDateTime.now());
-        employee.setUpdateTime(LocalDateTime.now());
+/*        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());*/
 /*        String jwt = request.getHeader(jwtProperties.getAdminTokenName());
         Claims claims = JwtUtil.parseJWT(jwtProperties.getAdminSecretKey(),jwt);
         log.info("对象{}",claims.get("empId"));
         Long operateUser = Long.valueOf(String.valueOf(claims.get("empId")));*/
         //后期需要改为当前登录用户id
-        Long operateUser = BaseContext.getCurrentId();
+/*        Long operateUser = BaseContext.getCurrentId();
         employee.setCreateUser(operateUser);
         employee.setUpdateUser(operateUser);
         BaseContext.removeCurrentId();
-        log.info("目标对象操作人id:{}",operateUser);
+        log.info("目标对象操作人id:{}",operateUser);*/
         employeeMapper.insert(employee);
     }
 
@@ -153,10 +153,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void update(EmployeeDTO employeeDTO) {
         Employee employee=new Employee();
         BeanUtils.copyProperties(employeeDTO,employee);//对象储存拷贝
-        employee.setUpdateTime(LocalDateTime.now());
+/*        employee.setUpdateTime(LocalDateTime.now());
         Long operateUser = BaseContext.getCurrentId();
-        employee.setUpdateUser(operateUser);
-        BaseContext.removeCurrentId();
+        employee.setUpdateUser(operateUser);*/ //aop实现
         employeeMapper.update(employee);
     }
 
