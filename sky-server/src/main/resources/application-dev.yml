@@ -10,5 +10,5 @@ sky:
   alioss:
     endpoint:        https://oss-cn-guangzhou.aliyuncs.com
     accessKeyId:     LTAI5tFXBNFpG9PHtETad4kx
-    accessKeySecret: dvwQRBVHsRQFQt8cRB
+    accessKeySecret: dvwQRBVHsRQFQt8cRBEgrLEn5FyVC9
     bucketName:      web-cyf-tlias
