@@ -22,4 +22,12 @@ public interface UserMapper {
      * @return
      */
     public void insert(User user);
+
+    /**
+     * 根据用户id查找用户
+     * @param userId
+     * @return
+     */
+    @Select("select *from user where id=#{userId}")
+    public User selectById(Long userId);
 }
