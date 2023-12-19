@@ -29,5 +29,5 @@ public interface UserMapper {
      * @return
      */
     @Select("select *from user where id=#{userId}")
-    public User selectById(Long userId);
+    public User getById(Long userId);
 }
