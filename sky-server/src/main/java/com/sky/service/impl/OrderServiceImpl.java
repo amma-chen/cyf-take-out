@@ -452,6 +452,8 @@ public class OrderServiceImpl implements OrderService {
         orders1.setId(orders.getId());
         // 更新订单状态,状态转为已完成
         orders1.setStatus(Orders.COMPLETED);
+        //更新送达时间
+        orders1.setDeliveryTime(LocalDateTime.now());
 
         orderMapper.update(orders1);
     }

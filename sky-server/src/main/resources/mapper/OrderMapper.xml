@@ -39,6 +39,9 @@
             <if test="deliveryTime != null">
                 delivery_time = #{deliveryTime}
             </if>
+            <if test="amount != null">
+                amount = #{amount}
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -67,4 +70,6 @@
         </where>
         order by order_time desc
     </select>
+
+
 </mapper>
