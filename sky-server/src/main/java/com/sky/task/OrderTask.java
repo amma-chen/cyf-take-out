@@ -24,7 +24,7 @@ public class OrderTask {
     /**
      * 每分钟检查超时任务订单
      */
-    @Scheduled(cron = " * 0/1 * * * ? ")//cron表达式设计为每分钟执行一次
+    @Scheduled(cron = " 0 0/1 * * * ? ")//cron表达式设计为每分钟执行一次
     public void processTimeoutOrders(){
         log.info("定时处理超时订单/min");
         //搜索所有订单支付时间超过15分钟且未支付（状态为1 PENDING_PAYMENT && orderTime+15分钟<now）
