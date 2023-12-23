@@ -7,6 +7,8 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -62,4 +64,14 @@ public interface OrderMapper {
      */
     @Select(" select * from orders where status =#{status} and order_time < #{orderTime}")
     List<Orders> getByStatusAndOrderTimeLT(Integer status, LocalDateTime orderTime);
+
+    /**
+     * 查询订单状态和下单时间范围内的订单总金额
+     * @param status
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    @Select(" select sum(amount) from orders where status =#{status} and order_time between #{beginTime} and #{endTime}")
+    BigDecimal sumByStatusAndOrderTime(Integer status, LocalDateTime beginTime, LocalDateTime endTime);
 }
