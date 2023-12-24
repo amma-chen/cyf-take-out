@@ -85,4 +85,12 @@
                 </if>
             </where>
     </select>
+
+    <select id="getSumSalesByStatusAndOrderTime" resultType="com.sky.dto.GoodsSalesDTO">
+        select od.name,sum(od.number) number from orders o left outer join order_detail od on o.id = od.order_id
+        where o.status=#{status} and o.order_time between #{beginTime} and #{endTime}
+        group by od.name
+        order by number desc
+        limit 0,10
+    </select>
 </mapper>

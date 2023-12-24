@@ -1,7 +1,9 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.dto.GoodsSalesDTO;
 import com.sky.dto.OrdersPageQueryDTO;
+import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -83,4 +85,13 @@ public interface OrderMapper {
      * @return
      */
     Integer countByStatusAndOrderTime(Integer status, LocalDateTime beginTime, LocalDateTime endTime);
+
+    /**
+     * 根据订单状态和时间查找销量
+     * @param status
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    List<GoodsSalesDTO> getSumSalesByStatusAndOrderTime(Integer status, LocalDateTime beginTime, LocalDateTime endTime);
 }

@@ -1,10 +1,13 @@
 package com.sky.service.impl;
 
+import com.sky.dto.GoodsSalesDTO;
+import com.sky.entity.OrderDetail;
 import com.sky.entity.Orders;
 import com.sky.mapper.OrderMapper;
 import com.sky.mapper.UserMapper;
 import com.sky.service.ReportService;
 import com.sky.vo.OrderReportVO;
+import com.sky.vo.SalesTop10ReportVO;
 import com.sky.vo.TurnoverReportVO;
 import com.sky.vo.UserReportVO;
 import lombok.extern.slf4j.Slf4j;
@@ -156,6 +159,38 @@ public class ReportServiceImpl implements ReportService {
                 .orderCountList(StringUtils.join(orderCountList,","))
                 .validOrderCount(validOrderCount)
                 .validOrderCountList(StringUtils.join(validOrderCountList,","))
+                .build();
+    }
+
+    /**
+     * 查询指定时间区间销量排名top10商品和销量
+     * @param begin
+     * @param end
+     * @return
+     */
+    @Override
+    public SalesTop10ReportVO getSalesTop10(LocalDate begin, LocalDate end) {
+        List<String> nameList = new ArrayList<>();
+        List<Integer> numberList = new ArrayList<>();
+
+        LocalDateTime beginTime = LocalDateTime.of(begin, LocalTime.MIN);
+        LocalDateTime endTime = LocalDateTime.of(end, LocalTime.MAX);
+        //├─ nameList	string	必须		商品名称列表，以逗号分隔
+        //├─ numberList	string	必须		销量列表，以逗号分隔
+        //找order表查看名称
+        //找oder-detail表 查看销量
+//select od.name,sum(od.number) from orders o left outer join order_detail od on o.id = od.order_id
+//where o.status=5 and o.order_time between '2023-10-20 01:32:26' and '2023-12-25 01:32:26' group by od.name;
+        List<GoodsSalesDTO> GoodsSalesList = orderMapper.getSumSalesByStatusAndOrderTime(Orders.COMPLETED, beginTime, endTime);
+        for (GoodsSalesDTO GoodsSales : GoodsSalesList) {
+            nameList.add(GoodsSales.getName());
+            numberList.add(GoodsSales.getNumber());
+        }
+
+
+        return SalesTop10ReportVO.builder()
+                .nameList(StringUtils.join(nameList,","))
+                .numberList(StringUtils.join(numberList,","))
                 .build();
     }
 }
