@@ -74,4 +74,13 @@ public interface OrderMapper {
      */
     @Select(" select sum(amount) from orders where status =#{status} and order_time between #{beginTime} and #{endTime}")
     BigDecimal sumByStatusAndOrderTime(Integer status, LocalDateTime beginTime, LocalDateTime endTime);
+
+    /**
+     * 查询订单状态和下单时间范围内的总订单数
+     * @param status
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    Integer countByStatusAndOrderTime(Integer status, LocalDateTime beginTime, LocalDateTime endTime);
 }
